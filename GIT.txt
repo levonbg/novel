@@ -3,3 +3,11 @@
 很累了，就不寫東西了
 
 明天説下Caffe2的Cuda_rtc
+
+1.需要学习python
+2.需要学习pandas
+3.需要学习matplotlib
+4.需要学习h5py
+5.需要学习numpy
+6.需要学习keras
+7.需要学习rocalphago
