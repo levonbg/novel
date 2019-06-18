@@ -19,193 +19,251 @@
                         </header>
                         <div class="Post-RichTextContainer">
                             <div class="RichText ztext Post-RichText">
-                                <h1>日志怎么看？</h1>
-
-                                <p>学习开源项目的套路：编译，跑起来，根据日志打印去学习最高效！                                </p>
-
-                                <p>Signal Message to [MRCPv2-Agent]    表示当前线程发了一个message给MRCPv2-Agent线程，这个MRCPv2-Agent是线程名</p>
-                                <p>Process Message [MRCPv2-Agent] 表示MRCPv2-Agent收到一条消息，开始处理</p>
-
-                                <h1>v1和v2的处理有区别，没有使用多态！</h1>
-
-                                <p>v1是rtsp调用了mrcp_server_resource_offer_process</p>
-                                <p>v2是sip调用了mrcp_server_control_media_offer_process</p>
-
-                                <h1>信令层呼入流程（v2，但是v1应该差不多）</h1>
-
-                                <p>sofia收到invite请求，状态机变化调用了mrcp_sofia_on_call_receive</p>
-								<p>1.调用了mrcp_session_offer，放SIGNALING_MESSAGE_OFFER到队列，</p>
-								<p>2.异步调用了mrcp_server_session_offer_process，mrcp_server_session_state_set(session,SESSION_STATE_GENERATING_ANSWER)</p>
-
-                                <p>2.1调用了mrcp_server_control_media_offer_process</p>
-
-                                <p>2.1.1mrcp_server_channel_create 创建通道</p>
-
-                                <p>2.1.1.1                                        mrcp_server_engine_channel_create</p>
-
-                                <p>2.1.1.1.1创建状态机，处理state_machine_on_message_dispatch和state_machine_on_deactivate</p>
-
-                                <p>2.1.1.1.2mrcp_engine_channel_virtual_create                                        这里是多态，调用了插件的demo_recog_engine_channel_create</p>
-
-                                <p>2.1.2                                        创建MPF_ADD_TERMINATION消息</p>
-
-                                <p>2.2调用了mrcp_server_av_media_offer_process   创建了RTP套接字</p>
-
-                                <p>2.3创建MPF_APPLY_TOPOLOGY消息后调用mpf_engine_message_send放到处理队列</p>
-
-                                <p>3.队列处理函数mrcp_server_mpf_message_process处理MPF_APPLY_TOPOLOGY调用mrcp_server_session_subrequest_remove</p>
-
-                                <p>3.1此时状态机状态SESSION_STATE_GENERATING_ANSWER,调用了mrcp_server_engine_channels_update</p>
-
-                                <p>3.1.1调用了mrcp_engine_channel_virtual_open 这里是多态，调用了插件的demo_recog_channel_open，发送了200OK</p>
-
-                              <div />
-                                <h1>模块介绍</h1>
-
-                                <p>mpf                   
-                                        处理RTP的模块，单线程</p>
-
-
-                                <h2>函数功能介绍</h2>
-
-                                <p>mpf_engine_message_get      从task_msg的container里获得一条message</p>
-
-                                <p>mpf_engine_message_send                                    把task_msg放到Media-Engine处理队列，等待处理
-									
-									</p>
-
-                                <p>mpf_bridge_create                    桥接两股音频流</p>
-
-                                <p>mpf_bridge_process                把收到的音频流写入sink</p>
-
-                         <div />
-
-                                <p>mpf_socket_create                创建一个udp socket</p>
-
-                                <p>mpf_rtp_socket_pair_create  创建一对RTP/RTCP
-                                        socket</p>
-
-                                <p>mpf_rtp_stream_local_media_create   创建RTP</p>
-
-                                <p>mpf_rtp_stream_modify                       创建和修改，都走这个函数</p>
-
-                                <p>mrcp_server_av_media_offer_process
-                                    的时候会创建RTP新建的message
-                                </p>
-
-                          <div />
-
-                                <h1>插件编写</h1>
-
-                                <p>mrcp_plugin_create 调用一次，设置回调函数demo_recog_msg_process，mrcp_engine_create
-                                </p>
-
-                   <div />
-
-                                <h2>engine_vtable</h2>
-
-                                <p>demo_recog_engine_destroy
-                                    调用一次关闭销毁一个线程</p>
-
-                                <p>demo_recog_engine_open      启动demo_recog_msg_process线程，mrcp_engine_open_respond
-                                </p>
-
-                                <p>demo_recog_engine_close  中断demo_recog_msg_process线程，mrcp_engine_close_respond
-                                </p>
-
-                                <p>demo_recog_engine_channel_create
-                                    创建通道，mrcp_engine_channel_create</p>
-<div />
-
-                                <h2>channel_vtable里的函数必须是非阻塞的！</h2>
-
-                                <p>demo_recog_msg_signal                           往当前插件队列里放入一个msg</p>
-
-                                <p>demo_recog_msg_process             处理当前插件队列里的msg，包括打开（返回invite的200ok），关闭（返回bye的200ok），处理MRCP请求</p>
-
-                            <div />
-
-                                <p>demo_recog_channel_open           表示通道打开，放DEMO_RECOG_MSG_OPEN_CHANNEL到当前插件队列</p>
-								<p>1.异步调用mrcp_engine_channel_open_respond，调用了mrcp_server_channel_open_signal，放ENGINE_TASK_MSG_OPEN_CHANNEL到server队列</p>
-                                <p>2.异步调用mrcp_server_on_engine_channel_open，调用了mrcp_server_session_subrequest_remove状态机处理</p>
-                                <p>SESSION_STATE_GENERATING_ANSWER，mrcp_server_engine_channels_update</p>
-                                <p>SESSION_STATE_INITIALIZING，      mrcp_server_session_answer_send</p>
-                                <p>SESSION_STATE_DEACTIVATING，          mrcp_server_session_terminate_process</p>
-                                <p>SESSION_STATE_TERMINATING，                                                 mrcp_server_session_terminate_send</p>
-
-                                <p>3.调用了mrcp_session_answer，这里是一个多态，使用了mrcp_sofia_on_session_answer/mrcp_unirtsp_on_session_answer</p>
-
-                                <p>demo_recog_channel_close   表示通道关闭，发一个DEMO_RECOG_MSG_CLOSE_CHANNEL</p>
-
-                                <p>消息到当前插件队列，异步调用mrcp_engine_channel_close_respond
-                                </p>
-
-                             <div />
-
-                                <p>demo_recog_channel_request_process
-                                    表示处理通道消息，发一个DEMO_RECOG_MSG_REQUEST_PROCESS，异步调用demo_recog_channel_request_dispatch</p>
-
-                          <div />
-
-                                <p>demo_recog_channel_recognize    处理recognize请求</p>
-
-                                <p>demo_recog_channel_stop             处理stop请求</p>
-
-                                <p>demo_recog_channel_timers_start
-                                    处理START-INPUT-TIMERS 请求</p>
-
-                                <p>demo_recog_start_of_input                     产生start of
-                                        input事件</p>
-
-                                <p>demo_recog_recognition_complete  产生recognition_complete事件</p>
-
-                            <div />
-
-                                <h2>audio_stream_vtable</h2>
-
-                                <p>demo_recog_stream_open</p>
-
-                                <p>demo_recog_stream_close</p>
-
-                                <p>demo_recog_stream_write   桥接音频处理回调，收到sip客户端的RTP流，写到sdk里</p>
-
-                           <div />
-
-                                <h1>ToDo：</h1>
-
-                                
-
-                                    
-1.
-
-                                    MRCP层建立过程，包括ASR，TTS过程</p>
-
-                                
-
-                                    
-2.
-
-                                    RTP建立过程，包括协商，抖动处理等</p>
-
-                                
-
-                                    
-3.
-
-                                    Session层代码逻辑</p>
-
-                                
-
-                                    
-4.
-
-                                    客户端处理代码</p>
-
-                                
-
-                                    
-5.                                 没找到合适的blog编辑器，纯手工敲html一天也才这个效果，下次用blog编辑器</p>
-
+                               <h1>
+    日志怎么看？
+</h1>
+<p>
+    学习开源项目的套路：编译，跑起来，根据日志打印去学习最高效！
+</p>
+<p>
+    Signal Message to [MRCPv2-Agent]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示当前线程发了一个message给MRCPv2-Agent线程，这个MRCPv2-Agent是线程名
+</p>
+<p>
+    Process Message [MRCPv2-Agent]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;表示MRCPv2-Agent收到一条消息，开始处理
+</p>
+<h1>
+    v1和v2的处理有区别，没有使用多态！
+</h1>
+<p>
+    v1是rtsp调用了mrcp_server_resource_offer_process
+</p>
+<p>
+    v2是sip调用了mrcp_server_control_media_offer_process
+</p>
+<h1>
+    信令层呼入流程（v2，但是v1应该差不多）
+</h1>
+<p>
+    sofia收到invite请求，状态机变化调用了mrcp_sofia_on_call_receive
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;调用了mrcp_session_offer，放SIGNALING_MESSAGE_OFFER到队列，
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;异步调用了mrcp_server_session_offer_process，mrcp_server_session_state_set(session,SESSION_STATE_GENERATING_ANSWER)
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;调用了mrcp_server_control_media_offer_process
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mrcp_server_channel_create 创建通道
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mrcp_server_engine_channel_create
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建状态机，处理state_machine_on_message_dispatch和state_machine_on_deactivate
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mrcp_engine_channel_virtual_create &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这里是多态，调用了插件的demo_recog_engine_channel_create
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建MPF_ADD_TERMINATION消息
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;调用了mrcp_server_av_media_offer_process&nbsp;&nbsp; 创建了RTP套接字
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;创建MPF_APPLY_TOPOLOGY消息后调用mpf_engine_message_send放到处理队列
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;队列处理函数mrcp_server_mpf_message_process处理MPF_APPLY_TOPOLOGY调用mrcp_server_session_subrequest_remove
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;此时状态机状态SESSION_STATE_GENERATING_ANSWER,调用了mrcp_server_engine_channels_update
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;调用了mrcp_engine_channel_virtual_open 这里是多态，调用了插件的demo_recog_channel_open，发送了200OK
+</p>
+<h1>
+    模块介绍
+</h1>
+<p>
+    mpf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;处理RTP的模块，单线程
+</p>
+<h2>
+    函数功能介绍
+</h2>
+<p>
+    mpf_engine_message_get&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 从task_msg的container里获得一条message
+</p>
+<p>
+    mpf_engine_message_send &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;把task_msg放到Media-Engine处理队列，等待处理
+</p>
+<p>
+    <br/>
+</p>
+<p>
+    mpf_bridge_create&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 桥接两股音频流
+</p>
+<p>
+    mpf_bridge_process&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 把收到的音频流写入sink
+</p>
+<p>
+    <br/>
+</p>
+<p>
+    mpf_socket_create&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;创建一个udp socket
+</p>
+<p>
+    mpf_rtp_socket_pair_create&nbsp; 创建一对RTP/RTCP
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;socket
+</p>
+<p>
+    mpf_rtp_stream_local_media_create&nbsp;&nbsp; 创建RTP
+</p>
+<p>
+    mpf_rtp_stream_modify&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;创建和修改，都走这个函数
+</p>
+<p>
+    mrcp_server_av_media_offer_process
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;的时候会创建RTP新建的message
+</p>
+<h1>
+    插件编写
+</h1>
+<p>
+    mrcp_plugin_create 调用一次，设置回调函数demo_recog_msg_process，mrcp_engine_create
+</p>
+<h2>
+    engine_vtable
+</h2>
+<p>
+    demo_recog_engine_destroy
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;调用一次关闭销毁一个线程
+</p>
+<p>
+    demo_recog_engine_open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 启动demo_recog_msg_process线程，mrcp_engine_open_respond
+</p>
+<p>
+    demo_recog_engine_close&nbsp; 中断demo_recog_msg_process线程，mrcp_engine_close_respond
+</p>
+<p>
+    demo_recog_engine_channel_create
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;创建通道，mrcp_engine_channel_create
+</p>
+<h2>
+    channel_vtable里的函数必须是非阻塞的！
+</h2>
+<p>
+    demo_recog_msg_signal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 往当前插件队列里放入一个msg
+</p>
+<p>
+    demo_recog_msg_process&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 处理当前插件队列里的msg，包括打开（返回invite的200ok），关闭（返回bye的200ok），处理MRCP请求
+</p>
+<p>
+    <br/>
+</p>
+<p>
+    demo_recog_channel_open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 表示通道打开，放DEMO_RECOG_MSG_OPEN_CHANNEL到当前插件队列
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;异步调用mrcp_engine_channel_open_respond，调用了mrcp_server_channel_open_signal，放ENGINE_TASK_MSG_OPEN_CHANNEL到server队列
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;异步调用mrcp_server_on_engine_channel_open，调用了mrcp_server_session_subrequest_remove状态机处理
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SESSION_STATE_GENERATING_ANSWER，mrcp_server_engine_channels_update
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SESSION_STATE_INITIALIZING，&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mrcp_server_session_answer_send
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SESSION_STATE_DEACTIVATING，&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mrcp_server_session_terminate_process
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SESSION_STATE_TERMINATING，&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mrcp_server_session_terminate_send
+</p>
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;调用了mrcp_session_answer，这里是一个多态，使用了mrcp_sofia_on_session_answer/mrcp_unirtsp_on_session_answer
+</p>
+<p>
+    <br/>
+</p>
+<p>
+    demo_recog_channel_close&nbsp;&nbsp; 表示通道关闭，发一个DEMO_RECOG_MSG_CLOSE_CHANNEL
+</p>
+<p>
+    消息到当前插件队列，异步调用mrcp_engine_channel_close_respond
+</p>
+<p>
+    demo_recog_channel_request_process
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;表示处理通道消息，发一个DEMO_RECOG_MSG_REQUEST_PROCESS，异步调用demo_recog_channel_request_dispatch
+</p>
+<p>
+    <br/>
+</p>
+<p>
+    demo_recog_channel_recognize&nbsp;&nbsp;&nbsp; 处理recognize请求
+</p>
+<p>
+    demo_recog_channel_stop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 处理stop请求
+</p>
+<p>
+    demo_recog_channel_timers_start
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;处理START-INPUT-TIMERS 请求
+</p>
+<p>
+    demo_recog_start_of_input&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 产生start of
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;input事件
+</p>
+<p>
+    demo_recog_recognition_complete&nbsp; 产生recognition_complete事件
+</p>
+<h2>
+    audio_stream_vtable
+</h2>
+<p>
+    demo_recog_stream_open
+</p>
+<p>
+    demo_recog_stream_close
+</p>
+<p>
+    demo_recog_stream_write&nbsp;&nbsp; 桥接音频处理回调，收到sip客户端的RTP流，写到sdk里
+</p>
+<h1>
+    ToDo：
+</h1>
+<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>
+        <p>
+            MRCP层建立过程，包括ASR，TTS过程
+        </p>
+    </li>
+    <li>
+        <p>
+            RTP建立过程，包括协商，抖动处理等
+        </p>
+    </li>
+    <li>
+        <p>
+            Session层代码逻辑
+        </p>
+    </li>
+    <li>
+        <p>
+            客户端处理代码
+        </p>
+    </li>
+    <li>
+        <p>
+            没找到合适的blog编辑器，纯手工敲html一天也才这个效果，下次用blog编辑器
+        </p>
+    </li>
+</ol>
                             </div>
                         </div>
                         <div class="ContentItem-time">发布于 2019-06-18</div>
