@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>第三篇</title>
+    <title>Kamailio 读书笔记</title>
     <link href="app.css" rel="stylesheet">
 </head>
 
@@ -15,11 +15,42 @@
                 <div class="Post-content">
                     <article class="Post-Main Post-NormalMain" tabindex="-1">
                         <header class="Post-Header">
-                            <h1 class="Post-Title">第三篇</h1>
+                            <h1 class="Post-Title">Kamailio 读书笔记</h1>
                         </header>
                         <div class="Post-RichTextContainer">
                             <div class="RichText ztext Post-RichText">
-                                <p>第三篇</p>
+                                <p>static str drg_table = str_init("dr_groups");<br/>
+static str drd_table = str_init("dr_gateways");<br/>
+static str drr_table = str_init("dr_rules");<br/>
+static str drl_table = str_init("dr_gw_lists");<br/>
+<br/>
+dr_reload_data ????<br/>
+dr_load_routing_info ???<br/><br/><br/><br/>
+
+    &nbsp;&nbsp;&nbsp; pv_export_t 是什么？ pv表示伪变量<br/>&nbsp;&nbsp;&nbsp; cmd_export_t 是什么？&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cfg里可以文本调用<br/>&nbsp;&nbsp;&nbsp; param_export_t 是什么？&nbsp; 模块的全局变量，cfg里通过modparam设置<br/>&nbsp;&nbsp;&nbsp; module_exports 是什么？ 包括导出函数，导出参数，导出rpc，导出伪变量，应答处理函数，init，child，destroyd<br/><br/>&nbsp;&nbsp;&nbsp; mod_register dlopen方式调用<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sr_kemi_modules_add 子系统，不知道干嘛的, cfg文件里可以调用的函数<br/><br/>&nbsp;&nbsp;&nbsp; src\core\sr_module.c 从这里读起&nbsp;&nbsp;&nbsp; 需要学习 .y 和 .lex文件怎么写，怎么读<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; load_module&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cfg文件里，调用loadmodule 的时候，调用这个函数<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 调用mod_register<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 提取exports<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 调用register_module<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rpc_hash_table<br/><br/>&nbsp;&nbsp;&nbsp; find_export&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 调用function<br/>&nbsp;&nbsp;&nbsp; find_rpc_export&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 调用rpc<br/><br/><br/>&nbsp;&nbsp;&nbsp; do_routing<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_routing_furi<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_routing_1<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do_routing_0<br/>&nbsp;&nbsp;&nbsp; ki_is_from_gw<br/>&nbsp;&nbsp;&nbsp; is_from_gw_0<br/>&nbsp;&nbsp;&nbsp; ki_is_from_gw_type<br/>&nbsp;&nbsp;&nbsp; ki_is_from_gw_type_flags<br/>&nbsp;&nbsp;&nbsp; ki_goes_to_gw_type<br/><br/>&nbsp;&nbsp;&nbsp; sr_event_exec<br/>&nbsp;&nbsp;&nbsp; receive_msg
+</p><h1>
+    todo
+</h1>
+<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>
+        <p>
+            网关注册<br/>
+        </p>
+    </li>
+    <li>
+        <p>
+            负载均衡<br/>
+        </p>
+    </li>
+    <li>
+        <p>
+            路由，动态路由<br/>
+        </p>
+    </li>
+</ol>
+<p>
+    <br/>
+</p>
                             </div>
                         </div>
                         <div class="ContentItem-time">发布于 2019-06-13</div>
