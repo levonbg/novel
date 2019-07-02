@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>你好，世界！</title>
+    <title>JsSIP 读书笔记</title>
     <link href="app.css" rel="stylesheet">
 </head>
 
@@ -15,14 +15,31 @@
                 <div class="Post-content">
                     <article class="Post-Main Post-NormalMain" tabindex="-1">
                         <header class="Post-Header">
-                            <h1 class="Post-Title">你好世界</h1>
+                            <h1 class="Post-Title">JsSIP 读书笔记</h1>
                         </header>
                         <div class="Post-RichTextContainer">
                             <div class="RichText ztext Post-RichText">
-                                <p>你好世界</p>
+                                <h1>
+    jssip.js 代码解析
+</h1>
+<h2>
+    发消息
+</h2>
+<p>
+    InitialRequestSender <br/>&nbsp;&nbsp; &nbsp;session.mediaSession.startCaller(mediaType, onMediaSuccess, onMediaFailure);<br/>&nbsp;&nbsp; &nbsp;成功以后调用onMediaSuccess<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;request.body = session.mediaSession.peerConnection.localDescription.sdp;设置sdp<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用 InitialRequestSender 的send函数<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;JsSIP.RequestSender.prototype 的send<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;InviteClientTransactionPrototype 的send<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;JsSIP.Transport 的 send<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;WebSocket 的 send 函数<br/>
+</p>
+<h2>
+    收消息
+</h2>
+<p>
+    JsSIP.Transport.prototype 的 onMessage<br/>&nbsp;&nbsp; &nbsp;请求 IncomingRequest<br/>&nbsp;&nbsp; &nbsp;应答 IncomingResponse<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对应事务的receiveResponse 例如 InviteClientTransactionPrototype 的 receiveResponse<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;JsSIP.RequestSender.prototype 的 receiveResponse<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;InitialRequestSender 的 receiveResponse<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Session.prototype.receiveInitialRequestResponse<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mediaSession.onMessage 设置远程的sdp，开始收语音<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;session.sendACK();<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;session.started(&#39;remote&#39;, response);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <br/>
+</p>
+<p>
+    <br/>
+</p>
                             </div>
                         </div>
-                        <div class="ContentItem-time">发布于 2019-06-13</div>
+                        <div class="ContentItem-time">发布于 2019-07-02</div>
                         <div class="Post-topicsAndReviewer">
                             <div class="TopicList Post-Topics">
                                 <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"

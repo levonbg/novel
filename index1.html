@@ -234,6 +234,14 @@
 <p>
     demo_recog_stream_write&nbsp;&nbsp; 桥接音频处理回调，收到sip客户端的RTP流，写到sdk里
 </p>
+<p></p>
+<h1>
+    如何读取配置的呢？plugin
+</h1>
+<p>
+    <br/>命名规范：前面是名词，后面是动词！<br/>资源id就是类型，asr，tts<br/>platforms\libunimrcp-server\src\unimrcp_server.c的unimrcp_server_start开始<br/>mrcp_server_create&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;设置了mrcp_server_start_request_process启动函数和mrcp_server_msg_process处理函数<br/>unimrcp_server_load&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;加载配置文件和插件<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_properties_load(loader,elem);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_components_load(loader,elem); 重点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_resource_factory_load(loader,elem); 启用哪些功能？ASR/TTS<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_plugin_factory_load(loader,elem);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_sip_uas_load(loader,elem,id);&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;启用mrcpv2的sip信令<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_rtsp_uas_load(loader,elem,id);&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;启用mrcpv1的rtsp信令<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_mrcpv2_uas_load(loader,elem,id);&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;启用mrcp的tcp协议设置<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_media_engine_load(loader,elem,id);&nbsp;&nbsp; &nbsp;启用RTP线程<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_rtp_factory_load(loader,elem,id);&nbsp;&nbsp; &nbsp;RTP配置<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_plugin_factory_load(loader,elem);&nbsp;&nbsp; &nbsp;重点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对每个插件调用 unimrcp_server_plugin_load 加载插件<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mrcp_server_engine_load/mrcp_engine_loader_plugin_load<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;plugin_creator_load 从dll里找到mrcp_plugin_create<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;plugin_creator&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用插件的mrcp_plugin_create<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;engine-&gt;config = config;&nbsp;&nbsp; &nbsp;也就是说调用完creator以后，才可以拿到config<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mrcp_server_engine_register/mrcp_engine_factory_engine_register<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;根据资源id，对插件设置状态机<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_settings_load(loader,elem);&nbsp;&nbsp; &nbsp;RTP相关配置<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_profiles_load(loader,elem);&nbsp;&nbsp; &nbsp;MRCP相关配置<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;unimrcp_server_misc_load(loader,elem);<br/>mrcp_server_start&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;启动处理线程<br/>&nbsp;&nbsp; &nbsp;调用了mrcp_server_start_request_process<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mrcp_engine_virtual_open<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;return engine-&gt;method_vtable-&gt;open(engine);指向了插件的demo_recog_engine_open，只会一次<br/>&nbsp;&nbsp; &nbsp;并loop 了mrcp_server_msg_process<br/>&nbsp;<br/>
+</p>
+<p></p>
 <h1>
     ToDo：
 </h1>
@@ -258,15 +266,10 @@
             客户端处理代码
         </p>
     </li>
-    <li>
-        <p>
-            没找到合适的blog编辑器，纯手工敲html一天也才这个效果，下次用blog编辑器
-        </p>
-    </li>
 </ol>
                             </div>
                         </div>
-                        <div class="ContentItem-time">发布于 2019-06-18</div>
+                        <div class="ContentItem-time">发布于 2019-07-02</div>
                         <div class="Post-topicsAndReviewer">
                             <div class="TopicList Post-Topics">
                                 <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
