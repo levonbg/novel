@@ -34,6 +34,23 @@ data1 = r'''<!DOCTYPE html>
 <body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
     <div class="container one-collumn sidebar-position-left page-post-detail ">
         <div class="headband"></div>
+         <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+            <div class="header-inner">
+                <div class="site-meta ">
+                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                            <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
+                            <span class="logo-line-after"><i></i></span> </a> </div>
+                    <p class="site-subtitle"></p>
+                </div>
+                <nav class="site-nav">
+                    <ul id="menu" class="menu">
+                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                                    class="menu-item-icon fa fa-fw fa-user"></i> <br />
+                                目录 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
         <main id="main" class="main">
             <div class="main-inner">
                 <div class="content-wrap">
