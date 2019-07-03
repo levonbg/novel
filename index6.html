@@ -20,11 +20,19 @@
                         <div class="Post-RichTextContainer">
                             <div class="RichText ztext Post-RichText">
                                 <p>
-    esl内连主流<br/>mod_fsv 提供了视频的录和播 编码没有研究，扩展名必须fsv<br/>媒体代理，只透传RTP，不参与sdp协商，所以不能转码，不能dtmf，ivr，通过app的set或者sip profile设置，启用late negotiation.<br/>媒体旁路，RTP不从fs走的代理模式 通过app的set设置<br/>窍门：如果已经configure了怎么办？可以rm config.cache &amp;&amp;./config.status --recheck &amp;&amp; ./config.status 从新生成makefile<br/>只显示小于当前level的log<br/>例子，内连为主<br/><br/><br/>
+    esl内连主流<br/>mod_fsv 提供了视频的录和播 编码没有研究，扩展名必须fsv<br/>媒体代理，只透传RTP，不参与sdp协商，所以不能转码，不能dtmf，ivr，通过app的set或者sip profile设置，启用late negotiation.<br/>媒体旁路，RTP不从fs走的代理模式 通过app的set设置<br/>
+	窍门：
+	<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>如果已经configure了怎么办？可以rm config.cache &amp;&amp;./config.status --recheck &amp;&amp; ./config.status 从新生成makefile<br/></li>
+	<li>只显示小于当前level的log<br/></li><li>
+    nc -v -l 127.0.0.1 -p 8084<br/>nc ip port</li></ol>
+</p>例子，内连为主<br/><br/>
+</p><p>
+    FreeSWITCH由几个模块接口组成，列表如下：<br/>拨号计划(Dialplan)： 实现呼叫状态，获取呼叫数据并进行路由。<br/>终点(Endpoint)： 为不同协议实现的接口，如SIP，TDM等。<br/>自动语音识别/文本语音转换(ASR/TTS)： 语音识别及合成。<br/>目录服务(Directory)： LDAP类型的数据库查询。<br/>事件(Events)： 模块可以触发核心事件，也可以注册自己的个性事件。这些事件可以在以后由事件消费者解析。<br/>事件句柄(Event handlers)： 远程访问事件和CDR。<br/>格式(Formats)： 文件模式如wav。<br/>日志(Loggers)： 控制台或文件日志。<br/>语言(Languages)： 嵌入式语言，优先lua和perl<br/>语音(Say)： 从声音文件中组织话语的特定的语言模块。<br/>计时器(Timers)： 可靠的计时器，用于间隔计时。<br/>应用(Applications)： 可以在一次呼叫中执行的程序，如语音信箱(Voicemail）。<br/>FSAPI(FreeSWITCH 应用程序接口） 命令行程序，XML RPC函数，CGI类型的函数，带输入输出原型的拨号计划函数变量。<br/>XML 到核心XML的钩子可用于实时地查询和创建基于XML的CDR。<br/><br/>
 </p>
                             </div>
                         </div>
-                        <div class="ContentItem-time">发布于 2019-06-13</div>
+                        <div class="ContentItem-time">发布于 2019-07-03</div>
                         <div class="Post-topicsAndReviewer">
                             <div class="TopicList Post-Topics">
                                 <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
