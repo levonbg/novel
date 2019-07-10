@@ -1,51 +1,160 @@
 <!DOCTYPE html>
-<html data-theme="light" data-focus-visible="" lang="zh">
+<html class="theme-next mist use-motion">
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>你好，世界！</title>
-    <link href="app.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <link href="app.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" id="hexo.configuration">
+        var NexT = window.NexT || {};
+        var CONFIG = {
+            scheme: 'Mist',
+            sidebar: { "position": "left", "display": "post" },
+            fancybox: true,
+            motion: true,
+            duoshuo: {
+                userId: undefined,
+                author: 'levon'
+            }
+        };
+    </script>
+    <title> lantern源码学习 | levon's Blog </title>
 </head>
 
-<body class="WhiteBg-body">
-    <div id="root">
-        <div class="App" data-reactroot="">
-            <main role="main" class="App-main">
-                <div class="Post-content">
-                    <article class="Post-Main Post-NormalMain" tabindex="-1">
-                        <header class="Post-Header">
-                            <h1 class="Post-Title">你好世界</h1>
-                        </header>
-                        <div class="Post-RichTextContainer">
-                            <div class="RichText ztext Post-RichText">
-                                <p>你好世界</p>
-                            </div>
-                        </div>
-                        <div class="ContentItem-time">发布于 2019-06-13</div>
-                        <div class="Post-topicsAndReviewer">
-                            <div class="TopicList Post-Topics">
-                                <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
-                                            href="index7.html">
-                                            <div class="Popover">
-                                                <div id="Popover4-toggle" aria-haspopup="true" aria-expanded="false"
-                                                    aria-owns="Popover4-content">上一篇</div>
-                                            </div>
-                                        </a></span></div>
-                                <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
-                                            href="index9.html">
-                                            <div class="Popover">
-                                                <div id="Popover4-toggle" aria-haspopup="true" aria-expanded="false"
-                                                    aria-owns="Popover4-content">下一篇</div>
-                                            </div>
-                                        </a></span></div>
-                            </div>
-                        </div>
-                    </article>
+<body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
+    <div class="container one-collumn sidebar-position-left page-post-detail ">
+        <div class="headband"></div>
+        <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+            <div class="header-inner">
+                <div class="site-meta ">
+                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                            <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
+                            <span class="logo-line-after"><i></i></span> </a> </div>
+                    <p class="site-subtitle"></p>
                 </div>
-            </main>
+                <nav class="site-nav">
+                    <ul id="menu" class="menu">
+                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                                    class="menu-item-icon fa fa-fw fa-user"></i> <br />
+                                目录 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <main id="main" class="main">
+            <div class="main-inner">
+                <div class="content-wrap">
+                    <div id="content" class="content">
+                        <div id="posts" class="posts-expand">
+                            <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"
+                                style="opacity: 1; display: block; transform: translateY(0px);">
+                                <header class="post-header">
+                                    <h1 class="post-title" itemprop="name headline">
+                                        lantern源码学习
+                                    </h1>
+                                    <div class="post-meta">
+                                        <span class="post-time">
+                                            <span class="post-meta-item-icon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </span>
+                                            <span class="post-meta-item-text">发表于</span>
+                                            <time itemprop="dateCreated" datetime="2017-07-10T21:33:12+08:00"
+                                                content="2017-07-10">
+                                                2019-07-10
+                                            </time>
+                                        </span>
+                                    </div>
+                                </header>
+
+                                <div class="post-body" itemprop="articleBody">
+                                   <p>
+    <h1><a href="https://feizhaojun.com/?p=2231">PAC和socks5学习</a></h1><br/>settings.SetProxyAll(true)&nbsp;&nbsp; 研究下 设置了什么东西<br/>127.0.0.1:8787 http端口，收到报文，存储pac文件内容<br/>127.0.0.1:8788 socks5端口，浏览器代理配置用<br/>
+</p>
+<h1>
+    github.com\getlantern\flashlight\flashlight.go 的Run读起
+</h1>
+
+    <br/>&nbsp;&nbsp; &nbsp;proxiesDispatch 干嘛的？ 重点 <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;cl.Configure(proxyMap, deviceID)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client.initBalancer(proxies, deviceID)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client.rp.Set(client.newReverseProxy())<br/>&nbsp;&nbsp; &nbsp;globalDispatch&nbsp; 干嘛的？ 重点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;applyClientConfig<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;fronted.Configure(<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;logging.Configure(<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;onConfigUpdate<br/>&nbsp;&nbsp; &nbsp;config.Init 来自 flashlight\config\initializer.go<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;pipeConfig(proxyOptions)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;proxiesDispatch<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;conf := newConfig proxies.yaml 文件<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; conf.poll&nbsp; 发一条get请求给服务器得到proxies.yaml 文件<br/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pipeConfig(globalOptions)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;proxiesDispatch<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;conf := newConfig global.yaml 文件<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;go conf.poll &nbsp; 发一条get请求给服务器得到global.yaml 文件
+<p>
+    &nbsp;&nbsp;&nbsp; proxied.SetProxyAddr(cl.Addr) <br/>&nbsp;&nbsp; &nbsp;client.NewClient(proxyAll).ListenAndServeSOCKS5 socks5 代理 &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client.dialCONNECT 收到代理请求<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client.shouldSendToProxy<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client.proxiedDialer<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;bal.Dial(&quot;connect&quot;, addr) chained\dialer.go 里的(d *dialer) Dial(network, addr string)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;d.DialServer()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;d.sendCONNECT(&quot;tcp&quot;, addr, conn)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;buildCONNECTRequest<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;发送 err = req.Write(conn)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;接受 err = checkCONNECTResponse(r, req)<br/>&nbsp;&nbsp; &nbsp;client.NewClient(proxyAll).ListenAndServeHTTP<br/>&nbsp;&nbsp; &nbsp;------------beforeStart 和 afterStart 来自 github.com\getlantern\flashlight\app\app.go<br/>&nbsp;&nbsp; &nbsp;beforeStart<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;setUpPacTool&nbsp;&nbsp; &nbsp; pac = 代理自动配置， 看pac.go<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;serveBandwidth&nbsp; 带宽多少是这里设置的么？<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;watchDirectAddrs <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;addDirectHost<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;cyclePAC<br/>&nbsp;&nbsp; &nbsp;afterStart&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;给http监听用的，http端口收到请求调用<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;servePACFile&nbsp;&nbsp; &nbsp;在干嘛<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;settings.GetSystemProxy() <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;pacOn()&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用cmd执行pac<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;doPACOn(pacURL) pacURL指向pac文件<br/>&nbsp;&nbsp; &nbsp;----------------<br/>&nbsp;&nbsp; &nbsp;proxy_on.pac <br/>&nbsp;&nbsp; &nbsp;学习下pac工具 怎么使用 <br/>&nbsp;&nbsp; &nbsp;1.对服务器发一个get http请求，得到proxies.yaml<br/>&nbsp;&nbsp; &nbsp;{<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://config.getiantem.org/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://d2wi0vwulmtn99.cloudfront.net/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://config-staging.getiantem.org/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://d33pfmbpauhmvd.cloudfront.net/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;or 127.0.0.1:8787<br/>&nbsp;&nbsp; &nbsp;}<br/>&nbsp;&nbsp; &nbsp;2.rot13解密文件，得到境外vpn的信息<br/>&nbsp;&nbsp; &nbsp;3.登陆这个vpn，使用socks5代理，内网穿透<br/>&nbsp;&nbsp; &nbsp;4.http监听，收到pac文件，pac用来自动判断是本地还是需要代理<br/>
+</p>
+<h1>
+    TODO
+</h1>
+<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>
+            http端口都在干嘛？socks5端口如何转发？
+    </li>
+    <li>
+            proxy和global是干嘛的，区别呢？
+    </li>
+    <li>
+            反向代理是干嘛的？
+    </li>
+    <li>
+            带宽怎么设置呢？<br/>
+    </li>
+</ol>
+<p></p>
+<p>
+    <br/>
+</p>
+                                </div>
+                                <footer class="post-footer">
+                                    <div class="post-nav">
+                                        <div class="post-nav-next post-nav-item"> <a href="index7.html" rel="next"> 上一篇
+                                            </a> </div>
+                                        <div class="post-nav-prev post-nav-item"> <a href="index9.html" rel="prev"> 下一篇
+                                            </a> </div>
+                                    </div>
+                                </footer>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer id="footer" class="footer">
+            <div class="footer-inner">
+                <div class="copyright">
+
+                    © 2019 -
+                    <span itemprop="copyrightYear">2019</span>
+                    <span class="author" itemprop="copyrightHolder">Levon</span>
+                </div>
+                <div class="powered-by">
+                    由 <a class="theme-link" href="http://hexo.io/">Hexo</a> 强力驱动
+                </div>
+                <div class="theme-info">
+                    主题 -
+                    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+                        NexT.Mist
+                    </a>
+                </div>
+            </div>
+        </footer>
+        <div class="back-to-top back-to-top-on">
+            <svg class="Zi Zi--BackToTop" title="回到顶部" fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                <path
+                    d="M16.036 19.59a1 1 0 0 1-.997.995H9.032a.996.996 0 0 1-.997-.996v-7.005H5.03c-1.1 0-1.36-.633-.578-1.416L11.33 4.29a1.003 1.003 0 0 1 1.412 0l6.878 6.88c.782.78.523 1.415-.58 1.415h-3.004v7.005z">
+                </path>
+            </svg>
         </div>
     </div>
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="velocity.js"></script>
+    <script type="text/javascript" src="velocity_002.js"></script>
+    <script type="text/javascript" src="jquery_002.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="motion.js"></script>
+    <script type="text/javascript" src="scrollspy.js"></script>
+    <script type="text/javascript" src="bootstrap.js"></script>
 </body>
 
 </html>
