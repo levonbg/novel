@@ -1,53 +1,130 @@
 <!DOCTYPE html>
-<html data-theme="light" data-focus-visible="" lang="zh">
+<html class="theme-next mist use-motion">
 
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>ELF 读书笔记</title>
-    <link href="app.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <link href="app.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" id="hexo.configuration">
+        var NexT = window.NexT || {};
+        var CONFIG = {
+            scheme: 'Mist',
+            sidebar: { "position": "left", "display": "post" },
+            fancybox: true,
+            motion: true,
+            duoshuo: {
+                userId: undefined,
+                author: 'levon'
+            }
+        };
+    </script>
+    <title> ELF 代码笔记 | levon's Blog </title>
 </head>
 
-<body class="WhiteBg-body">
-    <div id="root">
-        <div class="App" data-reactroot="">
-            <main role="main" class="App-main">
-                <div class="Post-content">
-                    <article class="Post-Main Post-NormalMain" tabindex="-1">
-                        <header class="Post-Header">
-                            <h1 class="Post-Title">ELF 读书笔记</h1>
-                        </header>
-                        <div class="Post-RichTextContainer">
+<body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
+    <div class="container one-collumn sidebar-position-left page-post-detail ">
+        <div class="headband"></div>
+        <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+            <div class="header-inner">
+                <div class="site-meta ">
+                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                            <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
+                            <span class="logo-line-after"><i></i></span> </a> </div>
+                    <p class="site-subtitle"></p>
+                </div>
+                <nav class="site-nav">
+                    <ul id="menu" class="menu">
+                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                                    class="menu-item-icon fa fa-fw fa-user"></i> <br />
+                                目录 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <main id="main" class="main">
+            <div class="main-inner">
+                <div class="content-wrap">
+                    <div id="content" class="content">
+                        <div id="posts" class="posts-expand">
+                            <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article"
+                                style="opacity: 1; display: block; transform: translateY(0px);">
+                                <header class="post-header">
+                                    <h1 class="post-title" itemprop="name headline">
+                                        ELF 代码笔记
+                                    </h1>
+                                    <div class="post-meta">
+                                        <span class="post-time">
+                                            <span class="post-meta-item-icon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </span>
+                                            <span class="post-meta-item-text">发表于</span>
+                                            <time itemprop="dateCreated" datetime="2017-07-03T21:33:12+08:00"
+                                                content="2017-07-03">
+                                                2019-07-03
+                                            </time>
+                                        </span>
+                                    </div>
+                                </header>
+
+                                <div class="post-body" itemprop="articleBody">
                             <div class="RichText ztext Post-RichText">
                                 <p>
     <br/><br/>1.前向，读入棋谱，输出棋步<br/>{<br/>&nbsp;&nbsp; &nbsp;棋谱转张量<br/>&nbsp;&nbsp; &nbsp;张量输入model<br/>&nbsp;&nbsp; &nbsp;张量输出<br/>&nbsp;&nbsp; &nbsp;张量转棋步<br/>&nbsp;&nbsp; &nbsp;game=elfgames.go.game model=df_pred model_file=elfgames.go.df_model3 python3 df_console.py --mode online --keys_in_reply V rv \<br/>&nbsp;&nbsp;&nbsp; --use_mcts --mcts_verbose_time --mcts_use_prior --mcts_persistent_tree --load path/to/modelfile.bin \<br/>&nbsp;&nbsp;&nbsp; --server_addr localhost --port 1234 \<br/>&nbsp;&nbsp;&nbsp; --replace_prefix resnet.module,resnet init_conv.module,init_conv \<br/>&nbsp;&nbsp;&nbsp; --no_check_loaded_options \<br/>&nbsp;&nbsp;&nbsp; --no_parameter_print \<br/>&nbsp; --verbose --gpu 0 --num_block 20 --dim 256 --mcts_puct 1.50 --batchsize 16 --mcts_rollout_per_batch 16<br/>&nbsp;&nbsp; &nbsp;--mcts_threads 2 --mcts_rollout_per_thread 8192 --resign_thres 0.05 --mcts_virtual_loss 1<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;evaluator 是什么？提供了什么方法？<br/>&nbsp;&nbsp; &nbsp;mi&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;是什么？提供了什么方法？<br/>&nbsp;&nbsp; &nbsp;sampler&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;是什么？提供了什么方法？<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;GC.start()<br/>&nbsp;&nbsp; &nbsp;GC.run()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;wait<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;batch_server_-&gt;waitBatch(comm::RecvOptions(&quot;&quot;, 1, time_usec), &amp;smem_batch_);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;evaluator.actor(batch)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;step<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;batch_server_-&gt;ReleaseBatch(smem_batch_, success);<br/>&nbsp;&nbsp; &nbsp;GC.stop()<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;py只负责了model的部分<br/>&nbsp;&nbsp; &nbsp;cpp负责了mcts和game的部分<br/>&nbsp;&nbsp; &nbsp;重点看 GoGameSelfPlay::act()&nbsp; 应该是一个线程？或者一个线程不停调act<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;const GoState&amp; s = _state_ext.state();&nbsp; 棋谱转张量<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;MCTSGoAI::actPolicyOnly<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ts_-&gt;runPolicyOnly(s).best_action<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;MCTSActor::evaluate(*root-&gt;getStatePtr(), &amp;resp);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;PreEvalResult res = pre_evaluate(s, resp);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;BoardFeature bf = get_extractor(s);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;if (!ai_-&gt;act(bf, &amp;reply)) <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client_-&gt;sendWait(targets_, &amp;funcs_s);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;post_nn_result(reply, resp);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;root-&gt;setEvaluation(resp);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;result.addActions(root-&gt;getStateActions());<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;MCTSGoAI::act<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ts_-&gt;run(s).best_action<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;notifySearches 启动n个线程<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;batch_rollouts<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;single_rollout&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;找到概率最大的叶子<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;node-&gt;findMove(options_.alg_opt, ctx.depth, &amp;action, output_.get());<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;BestAction best_action = UCT(alg_opt, oo);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;actor.evaluate(locked_states, &amp;resps);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;locked_leaves[j]-&gt;setEvaluation(resps[j]);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;p.first-&gt;updateEdgeStats(p.second, reward, options_.virtual_loss * count);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;chooseAction<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;_state_ext.forward(c)&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;张量转棋步<br/>}<br/>2.反向，训练，更新model<br/>{<br/>&nbsp;&nbsp; &nbsp;loss是什么？<br/>&nbsp;&nbsp; &nbsp;opt是什么？<br/>&nbsp;&nbsp; &nbsp;如何训练？<br/>&nbsp;&nbsp; &nbsp;各个参数是多少，为什么？<br/>&nbsp;&nbsp; &nbsp;start_server.sh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用来训练&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用train.py<br/>&nbsp;&nbsp; &nbsp;save=./myserver game=elfgames.go.game model=df_kl model_file=elfgames.go.df_model3 \<br/>&nbsp;&nbsp;&nbsp; stdbuf -o 0 -e 0 python -u ./train.py \<br/>&nbsp;&nbsp;&nbsp; --mode train&nbsp;&nbsp;&nbsp; --batchsize 2048 \<br/>&nbsp;&nbsp;&nbsp; --num_games 2048&nbsp;&nbsp;&nbsp; --keys_in_reply V \<br/>&nbsp;&nbsp;&nbsp; --T 1&nbsp;&nbsp;&nbsp; --use_data_parallel \<br/>&nbsp;&nbsp;&nbsp; --num_minibatch 1000&nbsp;&nbsp;&nbsp; --num_episode 1000000 \<br/>&nbsp;&nbsp;&nbsp; --mcts_threads 8&nbsp;&nbsp;&nbsp; --mcts_rollout_per_thread 200 \<br/>&nbsp;&nbsp;&nbsp; --keep_prev_selfplay&nbsp;&nbsp;&nbsp; --keep_prev_selfplay \<br/>&nbsp;&nbsp;&nbsp; --use_mcts&nbsp;&nbsp;&nbsp;&nbsp; --use_mcts_ai2 \<br/>&nbsp;&nbsp;&nbsp; --mcts_persistent_tree&nbsp;&nbsp;&nbsp; --mcts_use_prior \<br/>&nbsp;&nbsp;&nbsp; --mcts_virtual_loss 5&nbsp;&nbsp;&nbsp;&nbsp; --mcts_epsilon 0.25 \<br/>&nbsp;&nbsp;&nbsp; --mcts_alpha 0.03&nbsp;&nbsp;&nbsp;&nbsp; --mcts_puct 0.85 \<br/>&nbsp;&nbsp;&nbsp; --resign_thres 0.01&nbsp;&nbsp;&nbsp; --gpu 0 \<br/>&nbsp;&nbsp;&nbsp; --server_id myserver&nbsp;&nbsp;&nbsp;&nbsp; --eval_num_games 400 \<br/>&nbsp;&nbsp;&nbsp; --eval_winrate_thres 0.55&nbsp;&nbsp;&nbsp;&nbsp; --port 1234 \<br/>&nbsp;&nbsp;&nbsp; --q_min_size 200&nbsp;&nbsp;&nbsp;&nbsp; --q_max_size 4000 \<br/>&nbsp;&nbsp;&nbsp; --save_first&nbsp;&nbsp;&nbsp;&nbsp; \<br/>&nbsp;&nbsp;&nbsp; --num_block 20&nbsp;&nbsp;&nbsp;&nbsp; --dim 256 \<br/>&nbsp;&nbsp;&nbsp; --weight_decay 0.0002&nbsp;&nbsp;&nbsp; --opt_method sgd \<br/>&nbsp;&nbsp;&nbsp; --bn_momentum=0 --num_cooldown=50 \<br/>&nbsp;&nbsp;&nbsp; --expected_num_client 496 \<br/>&nbsp;&nbsp;&nbsp; --selfplay_init_num 0 --selfplay_update_num 0 \<br/>&nbsp;&nbsp;&nbsp; --eval_num_games 0 --selfplay_async \<br/>&nbsp;&nbsp;&nbsp; --lr 0.01&nbsp;&nbsp;&nbsp; --momentum 0.9&nbsp;&nbsp;&nbsp;&nbsp; 1&gt;&gt; log.log 2&gt;&amp;1 &amp;<br/>&nbsp;&nbsp; &nbsp;start_client.sh&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 用来下棋&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用selfplay.py<br/>&nbsp;&nbsp; &nbsp;root=./myserver game=elfgames.go.game model=df_pred model_file=elfgames.go.df_model3 \<br/>stdbuf -o 0 -e 0 python ./selfplay.py \<br/>&nbsp;&nbsp;&nbsp; --T 1&nbsp;&nbsp;&nbsp; --batchsize 128 \<br/>&nbsp;&nbsp;&nbsp; --dim0 256&nbsp;&nbsp;&nbsp; --dim1 256&nbsp;&nbsp;&nbsp; --gpu 0 \<br/>&nbsp;&nbsp;&nbsp; --keys_in_reply V rv&nbsp;&nbsp;&nbsp; --mcts_alpha 0.03 \<br/>&nbsp;&nbsp;&nbsp; --mcts_epsilon 0.25&nbsp;&nbsp;&nbsp; --mcts_persistent_tree \<br/>&nbsp;&nbsp;&nbsp; --mcts_puct 0.85&nbsp;&nbsp;&nbsp; --mcts_rollout_per_thread 200 \<br/>&nbsp;&nbsp;&nbsp; --mcts_threads 8&nbsp;&nbsp;&nbsp; --mcts_use_prior \<br/>&nbsp;&nbsp;&nbsp; --mcts_virtual_loss 5&nbsp;&nbsp; --mode selfplay \<br/>&nbsp;&nbsp;&nbsp; --num_block0 20&nbsp;&nbsp;&nbsp; --num_block1 20 \<br/>&nbsp;&nbsp;&nbsp; --num_games 32&nbsp;&nbsp;&nbsp; --ply_pass_enabled 160 \<br/>&nbsp;&nbsp;&nbsp; --policy_distri_cutoff 30&nbsp;&nbsp;&nbsp; --policy_distri_training_for_all \<br/>&nbsp;&nbsp;&nbsp; --port 1234 \<br/>&nbsp;&nbsp;&nbsp; --no_check_loaded_options0&nbsp;&nbsp;&nbsp; --no_check_loaded_options1 \<br/>&nbsp;&nbsp;&nbsp; --replace_prefix0 resnet.module,resnet init_conv.module,init_conv\<br/>&nbsp;&nbsp;&nbsp; --replace_prefix1 resnet.module,resnet init_conv.module,init_conv\<br/>&nbsp;&nbsp;&nbsp; --resign_thres 0.0&nbsp;&nbsp;&nbsp; --selfplay_timeout_usec 10 \<br/>&nbsp;&nbsp;&nbsp; --server_id myserver&nbsp;&nbsp;&nbsp; --use_mcts \<br/>&nbsp;&nbsp;&nbsp; --use_fp160 --use_fp161 \<br/>&nbsp;&nbsp;&nbsp; --use_mcts_ai2 --verbose<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;重点看 start_server.sh内容 GoGameTrain::act()&nbsp; 应该是一个线程？或者一个线程不停调act<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;const Record* r = sampler.sample(); 采样 棋谱<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;_state_ext[i]-&gt;fromRecord(*r);<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;client_-&gt;sendBatchWait({&quot;train&quot;}, funcPtrsToSend); 调用python的train<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;src_py\rlpytorch\trainer\trainer.py Trainer::train<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mi.zero_grad()&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;src_py\rlpytorch\model_interface.py&nbsp;&nbsp; ModelInterface::optimizer.zero_grad()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;res = self.rl_method.update(mi, batch,self.counter.stats, *args, **kwargs)&nbsp;&nbsp; MultiplePrediction::update<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;定义了loss函数 并调用 total_loss.backward() 得到导数<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mi.update_weights()&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;src_py\rlpytorch\model_interface.py&nbsp;&nbsp; ModelInterface::optimizer.step()&nbsp; 得到极值点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mi.update_model(&quot;actor&quot;, mi[&quot;model&quot;])&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;加载新的model文件<br/>}<br/><br/><br/><br/>rocalphago<br/>前向<br/>MCTSPlayer.get_move(棋谱) return 棋步<br/>&nbsp;&nbsp; &nbsp;mcts.get_move(state)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;下n盘棋 self._playout(state_copy, self._L) 得到分数最大的那步棋<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;找到叶子节点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;policy<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;extend<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;快走<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;价值<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;更新权重<br/>&nbsp;&nbsp;&nbsp; self.mcts.update_with_move(move)<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;root节点指向新的棋谱<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>反向<br/>run_training<br/>&nbsp;&nbsp; &nbsp;new 两个ProbabilisticPolicyPlayer<br/>&nbsp;&nbsp; &nbsp;run_n_games<br/>&nbsp;&nbsp; &nbsp;<br/><br/>&nbsp;&nbsp; &nbsp;<br/>forward<br/>run<br/>&nbsp;&nbsp; &nbsp;board 表示了棋盘<br/>&nbsp;&nbsp; &nbsp;{<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;提供两个api 数字转坐标 坐标转数字<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;当前state api&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;第一层 当前玩家，所有落子<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;第二层 对手玩家，所有落子<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;第三层 上一步落子<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;第四层 当前黑棋全1 当前白旗0<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;states 存了一个key-value 的map key是move value是当前玩家<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_move 的时候 ，&nbsp; states保存append最新的棋步和玩家的map<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;last move 保存<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;has winner 返回当前的赢家<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;game end 判断游戏是不是结束 1 是黑棋 2 是白旗 -1是平局<br/>&nbsp;&nbsp; &nbsp;}<br/>&nbsp;&nbsp; &nbsp;game&nbsp; 表示了游戏 存了棋盘<br/>&nbsp;&nbsp; &nbsp;{<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;while里调用当前玩家的get action<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;然后调用board的do move更新棋盘<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;判断有没有结束<br/>&nbsp;&nbsp; &nbsp;}<br/>&nbsp;&nbsp; &nbsp;根据神经网络的policy_value_fn创建mcts player（重点是get action）<br/>&nbsp;&nbsp; &nbsp;{<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用树搜索 得到action 和probs 的概率分布<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;执行_n_playout次下棋，模拟对弈_playout<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;找到叶子节点<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;执行神经网络的policy_value_fn,入参是board，得到p网络的概率分布，和v网络的值<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;policy_value_net 输入numpy 得到p网络输出，v网络输出<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;判断有没有结束<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;结束了，根据结果修改叶子的value<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;没结束，扩展这个叶子<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;反向更新这棵树<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;得到action和次数的map<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;归一化<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;返回act和概率<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;根据概率分布选择move <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;重置树<br/>&nbsp;&nbsp; &nbsp;}<br/><br/>backward<br/>&nbsp;&nbsp; &nbsp;game 的自己玩<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用plaer 的eget action 得到move<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;states 追加当前的board的states，当前的state存了（4，8，8）的张量<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;mcts probs&nbsp; 追加当前的概率分布<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;current players 追加当前玩家<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;棋盘domove更新棋盘<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;判断是不是结束<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;当前玩家是赢了，全是1，其他全是-1<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;player<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;得到概率分布，增加了不可预见性<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;更新这颗树<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;迭代game_batch_num次训练<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;先收集数据collect_selfplay_data<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;start_self_play<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;忘了<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;policy_update 更新 model<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;神经网络的policy_value的，得到当前的概率和value<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;policy_value_net得到概率和value<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;拟合epochs次<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用神经网络的train_step<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;self.optimizer.zero_grad()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;loss.backward()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;self.optimizer.step()<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用神经网络的policy_value。得到新的概率和value<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;判断是不是拟合足够<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;每check_freq次校验数据是不是更好了<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;policy_evaluate得到当前胜率<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;比赛n_games次，和mcts的pure，得到胜率<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;如果胜率变高，保存当前为最好的model<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;如果胜率是1，说明有问题胜率清零<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>网络模型<br/>&nbsp;&nbsp; &nbsp;4层 3*3 得到32层特征<br/>&nbsp;&nbsp; &nbsp;3*3 得到64层特征<br/>&nbsp;&nbsp; &nbsp;3*3 得到128层特征<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;p网络<br/>&nbsp;&nbsp; &nbsp;1*1 降维到4层<br/>&nbsp;&nbsp; &nbsp;全连接到 1层 log softmax<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;v网络<br/>&nbsp;&nbsp; &nbsp;1*1 降维到2层 p的一半<br/>&nbsp;&nbsp; &nbsp;全连接到 64&nbsp; 第一次特征提取的2倍<br/>&nbsp;&nbsp; &nbsp;全连接到 1&nbsp;&nbsp;&nbsp;&nbsp; tanh<br/>&nbsp;&nbsp; &nbsp;--------------<br/>&nbsp;&nbsp; &nbsp;前向 pred<br/>&nbsp;&nbsp; &nbsp;18层 3*3 得到128层特征<br/>&nbsp;&nbsp; &nbsp;20层 深度残差<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Conv2d<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;BatchNorm2d<br/>&nbsp;&nbsp; &nbsp;p网络<br/>&nbsp;&nbsp; &nbsp;1*1&nbsp; 128 降到2层<br/>&nbsp;&nbsp; &nbsp;2层 到1层&nbsp;&nbsp; &nbsp;logsoftmax<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;v网络<br/>&nbsp;&nbsp; &nbsp;1*1&nbsp; 降到 1层 p的一半<br/>&nbsp;&nbsp; &nbsp;全连接到256&nbsp; 第一次特征提取的2倍<br/>&nbsp;&nbsp; &nbsp;全连接到1 tanh<br/>&nbsp;&nbsp; &nbsp;后向 kl<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;----<br/>&nbsp;&nbsp; &nbsp;4 层80*80 -&gt; 8*8 32*40*40<br/>&nbsp;&nbsp; &nbsp;4*4&nbsp;&nbsp;&nbsp; 64*40*40<br/>&nbsp;&nbsp; &nbsp;3*3&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;64*40*40<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;1600<br/>&nbsp;&nbsp; &nbsp;512-action<br/>&nbsp;&nbsp; &nbsp;-----<br/>&nbsp;&nbsp; &nbsp;4 ceng 16<br/>&nbsp;&nbsp; &nbsp;16 32<br/>&nbsp;&nbsp; &nbsp;fc 256<br/>&nbsp;&nbsp; &nbsp;fc action<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br/>记忆法：<br/>list的append 以参数为元素追加<br/>list的extend 以参数打开以后追加<br/>zip就是转置的意思<br/><br/>交叉熵log里的永远是假定的<br/><br/>
 </p>
-                            </div>
+                                                 </div>
+                                </div>
+                                <footer class="post-footer">
+                                    <div class="post-nav">
+                                        <div class="post-nav-next post-nav-item"> <a href="index4.html" rel="next"> 上一篇
+                                            </a> </div>
+                                        <div class="post-nav-prev post-nav-item"> <a href="index6.html" rel="prev"> 下一篇
+                                            </a> </div>
+                                    </div>
+                                </footer>
+                            </article>
                         </div>
-                        <div class="ContentItem-time">发布于 2019-06-13</div>
-                                                <div class="Post-topicsAndReviewer">
-                            <div class="TopicList Post-Topics">
-                                <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
-                                            href="index4.html">
-                                            <div class="Popover">
-                                                <div id="Popover4-toggle" aria-haspopup="true" aria-expanded="false"
-                                                    aria-owns="Popover4-content">上一篇</div>
-                                            </div>
-                                        </a></span></div>
-                                <div class="Tag Topic"> <span class="Tag-content"><a class="TopicLink"
-                                            href="index6.html">
-                                            <div class="Popover">
-                                                <div id="Popover4-toggle" aria-haspopup="true" aria-expanded="false"
-                                                    aria-owns="Popover4-content">下一篇</div>
-                                            </div>
-                                        </a></span></div>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
+        <footer id="footer" class="footer">
+            <div class="footer-inner">
+                <div class="copyright">
+
+                    © 2019 -
+                    <span itemprop="copyrightYear">2019</span>
+                    <span class="author" itemprop="copyrightHolder">Levon</span>
+                </div>
+                <div class="powered-by">
+                    由 <a class="theme-link" href="http://hexo.io/">Hexo</a> 强力驱动
+                </div>
+                <div class="theme-info">
+                    主题 -
+                    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+                        NexT.Mist
+                    </a>
+                </div>
+            </div>
+        </footer>
+        <div class="back-to-top back-to-top-on">
+            <svg class="Zi Zi--BackToTop" title="回到顶部" fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                <path
+                    d="M16.036 19.59a1 1 0 0 1-.997.995H9.032a.996.996 0 0 1-.997-.996v-7.005H5.03c-1.1 0-1.36-.633-.578-1.416L11.33 4.29a1.003 1.003 0 0 1 1.412 0l6.878 6.88c.782.78.523 1.415-.58 1.415h-3.004v7.005z">
+                </path>
+            </svg>        </div>
     </div>
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="velocity.js"></script>
+    <script type="text/javascript" src="velocity_002.js"></script>
+    <script type="text/javascript" src="jquery_002.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+    <script type="text/javascript" src="motion.js"></script>
+    <script type="text/javascript" src="scrollspy.js"></script>
+    <script type="text/javascript" src="bootstrap.js"></script>
 </body>
 
 </html>

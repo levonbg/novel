@@ -21,12 +21,29 @@
             }
         };
     </script>
-    <title> 标签 | levon's Blog </title>
+    <title> 小狼毫 代码笔记 | levon's Blog </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
     <div class="container one-collumn sidebar-position-left page-post-detail ">
         <div class="headband"></div>
+        <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+            <div class="header-inner">
+                <div class="site-meta ">
+                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                            <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
+                            <span class="logo-line-after"><i></i></span> </a> </div>
+                    <p class="site-subtitle"></p>
+                </div>
+                <nav class="site-nav">
+                    <ul id="menu" class="menu">
+                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                                    class="menu-item-icon fa fa-fw fa-user"></i> <br />
+                                目录 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
         <main id="main" class="main">
             <div class="main-inner">
                 <div class="content-wrap">
@@ -36,7 +53,7 @@
                                 style="opacity: 1; display: block; transform: translateY(0px);">
                                 <header class="post-header">
                                     <h1 class="post-title" itemprop="name headline">
-                                        标题
+                                        小狼毫 代码笔记
                                     </h1>
                                     <div class="post-meta">
                                         <span class="post-time">
@@ -44,16 +61,32 @@
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
                                             <span class="post-meta-item-text">发表于</span>
-                                            <time itemprop="dateCreated" datetime="2017-07-03T21:33:12+08:00"
-                                                content="2017-07-03">
-                                                2019-07-03
+                                            <time itemprop="dateCreated" datetime="2017-07-15T21:33:12+08:00"
+                                                content="2017-07-15">
+                                                2019-07-15
                                             </time>
                                         </span>
                                     </div>
                                 </header>
 
                                 <div class="post-body" itemprop="articleBody">
-                                    <p>hello world!</p>
+<h1>
+    ibus解读部分：
+</h1>从rime_main.c 的main函数读起<br/>rime_api = rime_get_api(); // rime_api 全局变量 rime_get_api librime的核心<br/>rime_with_ibus();<br/>&nbsp;&nbsp; &nbsp;ibus_init();<br/>&nbsp;&nbsp; &nbsp;IBusBus *bus = ibus_bus_new();<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;g_object_ref_sink(bus);&nbsp;&nbsp;&nbsp; // 干嘛的？<br/>&nbsp;&nbsp; &nbsp;~ibus_bus_is_connected<br/>&nbsp;&nbsp; &nbsp;g_signal_connect(bus, &quot;disconnected&quot;, G_CALLBACK(ibus_disconnect_cb), NULL);<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;IBusFactory *factory = ibus_factory_new(ibus_bus_get_connection(bus));<br/>&nbsp;&nbsp; &nbsp;g_object_ref_sink(factory);<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;ibus_factory_add_engine(factory, &quot;rime&quot;, IBUS_TYPE_RIME_ENGINE);<br/>&nbsp;&nbsp; &nbsp;ibus_bus_request_name(bus, &quot;im.rime.Rime&quot;, 0)<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;load_plugin_modules&nbsp; // 打开 librime-legacy.so 库文件<br/>&nbsp;&nbsp; &nbsp;ibus_rime_start<br/>&nbsp;&nbsp; &nbsp;&nbsp; RIME_STRUCT(RimeTraits, ibus_rime_traits); // 申明一个 RimeTraits 类型的变量 ibus_rime_traits<br/>&nbsp;&nbsp; &nbsp;&nbsp; static RIME_MODULE_LIST(ibus_rime_modules, &quot;default&quot;, &quot;legacy&quot;); RIME_MODULE_LIST 申明一个list<br/>&nbsp;&nbsp; &nbsp;&nbsp; rime_api-&gt;initialize(&amp;ibus_rime_traits);<br/>&nbsp;&nbsp; &nbsp;&nbsp; rime_api-&gt;start_maintenance((Bool)full_check)) {<br/>&nbsp;&nbsp; &nbsp;&nbsp; rime_api-&gt;deploy_config_file(&quot;ibus_rime.yaml&quot;, &quot;config_version&quot;);<br/>&nbsp;&nbsp; &nbsp;ibus_rime_load_settings<br/>&nbsp;&nbsp; &nbsp;ibus_main();<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;rime_api-&gt;finalize();<br/>&nbsp;&nbsp; &nbsp;unload_plugin_modules();<br/><br/>&nbsp;&nbsp; &nbsp;g_object_unref(factory);<br/>&nbsp;&nbsp; &nbsp;g_object_unref(bus);<br/>
+<h1>
+    重点看 rime_engine.c 的代码
+</h1>
+<h1>
+    tsf解读部分
+</h1>
+&nbsp;&nbsp; &nbsp;某国力量，下载不了
+<h1>
+    librime解读部分
+</h1>
+<p>
+  以后慢慢补充吧，先看rime engine 代码，然后看看librime，最后把windows部分看下  
+</p>
+
                                 </div>
                                 <footer class="post-footer">
                                     <div class="post-nav">

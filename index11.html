@@ -21,12 +21,29 @@
             }
         };
     </script>
-    <title> 标签 | levon's Blog </title>
+    <title> wireshark 代码笔记 | levon's Blog </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
     <div class="container one-collumn sidebar-position-left page-post-detail ">
         <div class="headband"></div>
+        <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+            <div class="header-inner">
+                <div class="site-meta ">
+                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                            <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
+                            <span class="logo-line-after"><i></i></span> </a> </div>
+                    <p class="site-subtitle"></p>
+                </div>
+                <nav class="site-nav">
+                    <ul id="menu" class="menu">
+                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                                    class="menu-item-icon fa fa-fw fa-user"></i> <br />
+                                目录 </a> </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
         <main id="main" class="main">
             <div class="main-inner">
                 <div class="content-wrap">
@@ -36,7 +53,7 @@
                                 style="opacity: 1; display: block; transform: translateY(0px);">
                                 <header class="post-header">
                                     <h1 class="post-title" itemprop="name headline">
-                                        标题
+                                        wireshark 代码笔记
                                     </h1>
                                     <div class="post-meta">
                                         <span class="post-time">
@@ -44,16 +61,92 @@
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
                                             <span class="post-meta-item-text">发表于</span>
-                                            <time itemprop="dateCreated" datetime="2017-07-03T21:33:12+08:00"
-                                                content="2017-07-03">
-                                                2019-07-03
+                                            <time itemprop="dateCreated" datetime="2017-07-15T21:33:12+08:00"
+                                                content="2017-07-15">
+                                                2019-07-15
                                             </time>
                                         </span>
                                     </div>
                                 </header>
 
                                 <div class="post-body" itemprop="articleBody">
-                                    <p>hello world!</p>
+                                    <h1>
+    学习目标：
+</h1>
+<ol class=" list-paddingleft-2">
+    <li>        
+      wireshark是如何抓包的？ 拼了一个dumpcap.exe 的字符串，起了一个子进程去dump</li><li>
+学习分析报文在界面展示</li><li>
+lua的api如何使用</li><li>
+如何分析sip呢？</li><li>
+如何分析rtp呢？</li><li>
+编解码插件如何写</li><li>
+目录结构整理</li>
+</ol>
+<p>
+caputils 目录用来 包装pcap之类的sdk的api &nbsp; &nbsp; &nbsp; <br/>
+epan\dissectors 目录用来放协议的解析代码 &nbsp; &nbsp; &nbsp; &nbsp;<br/><br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;从 ui/qt/main.cpp 的 main 读起，是行不通的。。。 &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;应该从 ui\qt\main_window_slots.cpp 的 MainWindow::startCapture() 读起 &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;showCapture(); &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_start &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;sync_pipe_start &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;拼了一个 “dumpcap.exe 参数列表” 的字符串，然后起了一个进程执行这个字符串 &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;pipe_input_set_handler 设置了回调函数 sync_pipe_input_cb &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_callback_invoke &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;遍历 调用 capture_callbacks-&gt;data-&gt;cb_fct() &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_info_ui_create ui\qt\capture_info_dialog.cpp &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_info_ui_update 谁调用呢？ &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;void CaptureInfoModel::updateInfo() 往ui加数据 &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;cap_info_ 这个数据哪里来的？ &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;points_ 存了什么？ &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;last_count_ 存了什么？ &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_dissector_get_count 在干嘛 &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;HAVE_AIRPCAP 已经不用了， 改用 HAVE_LIBPCAP &nbsp; &nbsp; &nbsp; &nbsp;<br/><br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;capture_info_new_packets &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_input_new_packets &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;report_packet_count SP_PACKET_COUNT &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_loop_start &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;capture_info_packet &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;try_capture_dissector &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;capture_dissector_tables 根据 第一个参数 找到 sub_dissectors &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;sub_dissectors-&gt;hash_table 根据第二个参数 找到 handle &nbsp; &nbsp; &nbsp; &nbsp;<br/>
+
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;调用 handle-&gt;dissector 解码 &nbsp; &nbsp; &nbsp; &nbsp;<br/><br/>
+</p>
+<p>
+    另起一个进程dumpcap.exe 写文件，同时主进程不停读取这个文件，并调用handle-&gt;dissector 解码, 把字符串打印更新到ui<br/>
+	handle-&gt;dissector 就是一个一个字节去解码，tcp可以参考packet-rtsp,udp可以参考packet-sip<br/>
+</p>
                                 </div>
                                 <footer class="post-footer">
                                     <div class="post-nav">

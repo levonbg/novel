@@ -93,6 +93,9 @@
     构造cmd,把be里的文件名和参数拼起来<br/>out, err := cmd.CombinedOutput() <br/>
     执行cmd命令<br/>----------------<br/>&nbsp;&nbsp; &nbsp;1.对服务器发一个get http请求，得到proxies.yaml<br/>&nbsp;&nbsp; &nbsp;{<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://config.getiantem.org/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://d2wi0vwulmtn99.cloudfront.net/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://config-staging.getiantem.org/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;http://d33pfmbpauhmvd.cloudfront.net/proxies.yaml.gz<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;or 127.0.0.1:8787<br/>&nbsp;&nbsp; &nbsp;}<br/>&nbsp;&nbsp; &nbsp;2.rot13解密文件，得到境外vpn的信息<br/>&nbsp;&nbsp; &nbsp;3.登陆这个vpn，使用socks5代理，内网穿透<br/>&nbsp;&nbsp; &nbsp;4.http监听，收到浏览器请求，返回pac报文，pac用来自动判断是本地还是需要代理<br/>
 </p>
+<p>
+    <br/>serveBandwidth<br/>给本地的wss端口，发起/data的wss连接，收发都是json报文<br/>helloFn 指向一个函数指针，入参是write函数，功能是调用这个write函数<br/>service.Out &lt;- quota 谁发给谁？<br/>&nbsp;&nbsp; &nbsp;flashlight\ui\service.go 的write函数读取 json报文发给 defaultUIChannel.Out<br/><br/><br/>android 端代码<br/>gomobile 编译出一个liblantern.aar文件，build.gradle 里 依赖这个文件，就可以调用了<br/>手机端 从 startLocalProxy() 读起<br/>&nbsp;&nbsp; &nbsp;org.lantern.mobilesdk.Lantern.enable/disable<br/>LanternService.java&nbsp;&nbsp; &nbsp; 的onHandleIntent <br/>&nbsp;&nbsp; &nbsp;EmbeddedLantern().start<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;go.lantern.Lantern.Start 指向了 getlantern\lantern\lantern.go 的Start 不知道怎么过来的<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;根据return调用 System.setProperty 设置代理 <br/><br/><br/><br/>
+</p>
 <h1>
     TODO
 </h1>
