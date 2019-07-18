@@ -21,7 +21,7 @@
             }
         };
     </script>
-    <title> 标签 | levon's Blog </title>
+    <title> Transformer 代码笔记 | levon's Blog </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
@@ -30,14 +30,14 @@
         <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
             <div class="header-inner">
                 <div class="site-meta ">
-                    <div class="custom-logo-site-title"> <a href="/" class="brand" rel="start">
+                    <div class="custom-logo-site-title"> <a href="/novel" class="brand" rel="start">
                             <span class="logo-line-before"><i></i></span> <span class="site-title">Levon's Blog</span>
                             <span class="logo-line-after"><i></i></span> </a> </div>
                     <p class="site-subtitle"></p>
                 </div>
                 <nav class="site-nav">
                     <ul id="menu" class="menu">
-                        <li class="menu-item menu-item-about"> <a href="/" rel="section"> <i
+                        <li class="menu-item menu-item-about"> <a href="/novel" rel="section"> <i
                                     class="menu-item-icon fa fa-fw fa-user"></i> <br />
                                 目录 </a> </li>
                     </ul>
@@ -53,7 +53,7 @@
                                 style="opacity: 1; display: block; transform: translateY(0px);">
                                 <header class="post-header">
                                     <h1 class="post-title" itemprop="name headline">
-                                        标题
+                                        Transformer 代码笔记
                                     </h1>
                                     <div class="post-meta">
                                         <span class="post-time">
@@ -61,16 +61,18 @@
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
                                             <span class="post-meta-item-text">发表于</span>
-                                            <time itemprop="dateCreated" datetime="2017-07-03T21:33:12+08:00"
-                                                content="2017-07-03">
-                                                2019-07-03
+                                            <time itemprop="dateCreated" datetime="2017-07-18T21:33:12+08:00"
+                                                content="2017-07-18">
+                                                2019-07-18
                                             </time>
                                         </span>
                                     </div>
                                 </header>
 
                                 <div class="post-body" itemprop="articleBody">
-                                    <p>hello world!</p>
+                                    <p>
+    1.学什么是GAN，什么是自注意力，什么是transformer（2017 google提出的翻译网络，encoder-decoder模型，也可以用来tts）<br/>GAN需要其他项目看看了<br/>&nbsp;&nbsp; &nbsp;G1网络跑一次前向，得到数据集（真，假），来训练A1网络<br/>&nbsp;&nbsp; &nbsp;用A1网络，训练G2网络。循环这个过程<br/>表征学习Representation Learning在自编码器中，表征（representation）、特征（feature）、编码（code）其实三个词都是同义词<br/><br/>Encoder-Decoder模型引入了Attention model<br/>什么是soft Attention model, hard Attention model , static Attention model<br/>Transformer 长程依赖的捕获能力是比 RNN 类结构差的。<br/>CNN/RNN/Transformer(self-attention,增加rnn提升效果)<br/><br/>Attention 函数的本质可以被描述为一个查询（query）到一系列（键key-值value）对的映射，就是个softmax<br/>在计算 Attention 时主要分为三步:<br/>1.是将 query 和每个 key 进行相似度计算得到权重，常用的相似度函数有点积，拼接，感知机等<br/>2.一般是使用一个 softmax 函数对这些权重进行归一化<br/>3.将权重和相应的键值 value 进行加权求和得到最后的 Attention。<br/>主要亮点<br/>1.用 Attention 机制代替了 RNN 搭建了整个模型框架<br/>2.提出了多头注意力（Multi-headed Attention）机制方法<br/>由编码器和解码器组成<br/>&nbsp;&nbsp; &nbsp;编码器栈式搭建了 N 个块<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;编码器的一个网络块中<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;一个多头 Attention 子层<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;一个前馈神经网络子层组成<br/>&nbsp;&nbsp; &nbsp;解码器栈式搭建了 N 个块<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;解码器的一个网络块中<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;解码器的一个网络块中多了一个多头 Attention 层<br/>attention函数执行多次，就是多头attention了，结果拼接，再做一次线性变换<br/>在并行方面，多头 Attention 和 CNN 一样不依赖于前一时刻的计算，可以很好的并行，优于 RNN。<br/>由于 Self-Attention 是每个词和所有词都要计算 Attention，所以不管他们中间有多长距离，最大的路径长度也都只是 1。可以捕获长距离依赖关系。<br/>重点是transformer，不是self attention<br/><br/>resnet核心，add以后norm一下<br/><br/>model.train() 是什么？<br/>para_model 是什么？<br/><br/>
+</p>
                                 </div>
                                 <footer class="post-footer">
                                     <div class="post-nav">
