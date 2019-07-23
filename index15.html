@@ -21,7 +21,7 @@
             }
         };
     </script>
-    <title> 标签 | levon's Blog </title>
+    <title> BoringSSL 代码笔记 | levon's Blog </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" class="" style="padding-right: 0px;" lang="zh-Hans">
@@ -53,7 +53,7 @@
                                 style="opacity: 1; display: block; transform: translateY(0px);">
                                 <header class="post-header">
                                     <h1 class="post-title" itemprop="name headline">
-                                        标题
+                                        BoringSSL 代码笔记
                                     </h1>
                                     <div class="post-meta">
                                         <span class="post-time">
@@ -61,16 +61,37 @@
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
                                             <span class="post-meta-item-text">发表于</span>
-                                            <time itemprop="dateCreated" datetime="2017-07-03T21:33:12+08:00"
-                                                content="2017-07-03">
-                                                2019-07-03
+                                            <time itemprop="dateCreated" datetime="2017-07-23T21:33:12+08:00"
+                                                content="2017-07-23">
+                                                2019-07-23
                                             </time>
                                         </span>
                                     </div>
                                 </header>
 
                                 <div class="post-body" itemprop="articleBody">
-                                    <p>hello world!</p>
+                                    <h1>握手过程</h1>
+<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>
+            客户端发送clienthello<br/>&nbsp;&nbsp; &nbsp;TLS的版本号<br/>&nbsp;&nbsp; &nbsp;加密套件列表<br/>&nbsp;&nbsp; &nbsp;sessionid<br/>&nbsp;&nbsp; &nbsp;压缩算法列表
+		</li><li>服务端发送 serverhello<br/>&nbsp;&nbsp; &nbsp;选择TLS版本<br/>&nbsp;&nbsp; &nbsp;选择加密套件<br/>&nbsp;&nbsp; &nbsp;会话id<br/>&nbsp;&nbsp; &nbsp;选择压缩算法<br/>encrypted ext<br/>cert<br/>veri<br/>finished<br/></li><li>客户端 finished<br/></li></ol>
+		<h1>tls 1.3 更新点：</h1>&nbsp;&nbsp;&nbsp; 移除RSA密钥传输——不支持前向安全性<br/>&nbsp;&nbsp;&nbsp; 移除CBC模式密码——易受BEAST和Lucky 13攻击，改用gcm<br/>&nbsp;&nbsp;&nbsp; 移除RC4流密码——在HTTPS中使用并不安全<br/>&nbsp;&nbsp;&nbsp; 移除SHA-1，md5哈希函数——建议以SHA-2取而代之<br/>&nbsp;&nbsp;&nbsp; 任意Diffie-Hellman组——CVE-2016-0701漏洞<br/>&nbsp;&nbsp;&nbsp; 输出密码——易受FREAK和LogJam攻击<br/>&nbsp;&nbsp;&nbsp; 在TLS 1.3版本中，重新磋商是不可能的。<br/>&nbsp;&nbsp;&nbsp; 现在大部分握手都会被加密。<br/>&nbsp;&nbsp;&nbsp; 更多类型的消息现在可以有扩展(这对定制扩展API和证书透明系统有影响)。<br/>&nbsp;&nbsp;&nbsp; 在TLS 1.3连接中不再允许使用DSA证书。
+        <p>
+            <h1>TLS 1.3包括3个子协议——alert、handshake、record</h1>handshake协议负责协商使用的TLS版本、加密算法、哈希算法、密钥材料和其他与通信过程有关的信息，对服务器进行身份认证，对客户端进行可选的身份认证，最后对整个握手阶段信息进行完整性校验以防范中间人攻击，是整个TLS协议的核心。<br/>record协议负责对接收到的报文进行加密解密，将其分片为合适的长度后转发给其他协议层。<br/>alert协议负责处理消息传输与握手阶段中的异常情况。<br/>change_cipher_spec 已经废除<br/><br/>PSK（pre_shared_key）——新的密钥交换暨身份认证机制<br/>HKDF（HMAC_based_key_derivation_function）——新的密钥导出函数<br/>AEAD（Authenticated_Encrypted_with_associated_data）——唯一保留的加密方式<br/>&nbsp;&nbsp; &nbsp;AEAD也有一定局限性：使用同一密钥加密的明文达到一定长度后，就不能再保证密文的安全性。因此，TLS 1.3中引入了密钥更新机制，一方可以（通常是服务器）向另一方发送Key Update（KU）报文，对方收到报文后对当前会话密钥再使用一次HKDF，计算出新的会话密钥，使用该密钥完成后续的通信。<br/>&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;<br/><br/>ssl_run_handshake 开始<br/>&nbsp;&nbsp; &nbsp;客户端 ssl_client_handshake<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_start_connect 初始化状态 do_start_connect<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl_write_client_hello 发送了hello<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_enter_early_data &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_enter_early_data<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_server_hello&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_server_hello<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;因为是tls1.3 所以 state_tls13 do_tls13<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls13_client_handshake 根据 hs-&gt;tls13_state 判断 <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_hello_retry_request &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_hello_retry_request <br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_server_hello&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_server_hello<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls13_set_traffic_key &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;收到服务器应答，得到了key，setkey得到aead<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl_cipher_get_evp_aead 根据cipher 得到aead<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_encrypted_extensions&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_encrypted_extensions<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_certificate_request&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_certificate_request<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_server_certificate&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_server_certificate<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_server_certificate_verify&nbsp;&nbsp; &nbsp;do_read_server_certificate_verify<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_read_server_finished&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_read_server_finished<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_send_end_of_early_data&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_send_end_of_early_data<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_send_client_certificate&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_send_client_certificate<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_send_client_certificate_verify&nbsp;&nbsp; &nbsp;do_send_client_certificate_verify<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_complete_second_flight&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_complete_second_flight<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_done<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;x509_method 思考下&nbsp;&nbsp; &nbsp;<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;state_finish_client_handshake 直接finish<br/>&nbsp;&nbsp; &nbsp;服务端 ssl_server_handshake<h1>crypto目录下是加密算法，重点</h1>demo SSL_开头的函数，都在ssl_lib.cc里，tls的method，都在tls_method.cc里<br/>1.tcp connect 得到sock<br/>2.得到bio BIO_new_socket(sock, BIO_CLOSE)<br/>3.得到ctx SSL_CTX_new(TLS_method())<br/>4.得到ssl SSL_new(ctx)<br/>5.SSL_set_bio(ssl.get(), bio.get(), bio.get())<br/>6.SSL_connect&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;负责握手 协商 交换密钥<br/>7.SSL_read/SSL_write&nbsp;&nbsp; &nbsp;负责收发数据<br/>&nbsp;&nbsp; &nbsp;read<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SSL_peek<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl_read_impl<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl_open_app_data<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl3_open_app_data&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对应method的read<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls_open_record&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 解密数据<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;EVP_AEAD_CTX_open<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;EVP_AEAD_CTX_open_gather<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对应的open_gather<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl_handle_open_record<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls_read_buffer_extend_to 收数据&nbsp; 看ssl\ssl_buffer.cc代码<br/>&nbsp;&nbsp; &nbsp;write<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;ssl3_write_app_data&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对应method的write<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;do_ssl3_write&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;s3_pkt.cc<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls_seal_record&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 加密数据<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;EVP_AEAD_CTX_seal_scatter<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;对应的seal_scatter<br/>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;tls_write_buffer_flush&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 发数据&nbsp; 看ssl\ssl_buffer.cc代码<br/>8.SSL_shutdown&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;负责close socket<br/><h1>
+    TODO
+</h1>
+<ol style="list-style-type: decimal;" class=" list-paddingleft-2">
+    <li>
+            x509
+    </li>
+    <li>
+            x509v3
+    </li>
+    <li>
+            ca认证
+    </li>
+</ol>
+        </p>
                                 </div>
                                 <footer class="post-footer">
                                     <div class="post-nav">
